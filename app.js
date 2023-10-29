@@ -52,6 +52,50 @@ TaskList.find({ }).then(lists=>{res.send(lists)}).catch((error)=>{
 })
 });
 
+//Route or Endpoint for getting  a Tasklist by id:  http://localhost:3000/tasklists/653e50d7893ff925ceece5a0
+
+app.get('/tasklists/:tasklistId',(req,res)=>{
+    let tasklistId = req.params.tasklistId;
+    TaskList.find({_id:tasklistId}).then((taskList)=>{
+        res.status(200);
+        res.send(taskList)
+    }).catch((error)=>{  console.log(error);})
+})
+//Route or Endpoint for creating a Tasklist
+
+app.post('/tasklists',(req,res)=>{
+    console.log('Im inside post api',req.body)
+    let tasklistObj = {'title':req.body.title  };
+TaskList(tasklistObj).save().then((lists)=>{res.status(201); res.send(lists)
+    }
+).catch((error)=>{
+    console.log(error);
+})
+});
+
+
+//Put is full update of object
+//Route or Endpoint for updating Tasklist with id: http://localhost:3000/tasklists/653e50d7893ff925ceece5a0
+app.put('/tasklists/:tasklistId',(req,res)=>{
+ TaskList.findOneAndUpdate({_id:req.params.tasklistId},{$set:req.body}, { new: true }).then((lists)=>{res.status(200); res.send(lists)}).catch((error)=>{
+    console.log(error);
+})
+});
+
+//patch is partial update of one field of an object
+app.patch('/tasklists/:tasklistId',(req,res)=>{
+    TaskList.findOneAndUpdate({_id:  req.params.tasklistId},{$set:req.body}, { new: true }).then((lists)=>{res.status(200); res.send(lists)}).catch((error)=>{
+       console.log(error);
+   })
+   })
+
+//Delete a tasklist by id
+app.delete('/tasklists/:tasklistId',(req,res)=>{
+    TaskList.findByIdAndDelete({_id:  req.params.tasklistId}).then((lists)=>{res.status(200); res.send(lists)}).catch((error)=>{
+       console.log(error);
+   })
+   })
+
 
 app.listen(3000,()=>{
     console.log('Server started on port 3000');
